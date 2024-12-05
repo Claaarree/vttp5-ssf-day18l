@@ -7,15 +7,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.vttp5a_ssf_day18l.model.HttpSessionData;
+import sg.edu.nus.iss.vttp5a_ssf_day18l.model.HttpSessionList;
 import sg.edu.nus.iss.vttp5a_ssf_day18l.service.SessionDataService;
 
 @Controller
@@ -27,12 +26,13 @@ public class SessionController {
 
     @GetMapping("/home")
     public String homepage(HttpSession httpSession) {
-        // Optional<List<HttpSessionData>> data = Optional.of((List<HttpSessionData>) httpSession.getAttribute("data"));
+        HttpSessionList httpSessionList = (HttpSessionList)httpSession.getAttribute("session");
+        // Optional<List<HttpSessionData>> data = Optional.of(httpSessionList.getSessionList());
         // List<HttpSessionData> dataList = data.get();
-        List<HttpSessionData> dataList = (List<HttpSessionData>)httpSession.getAttribute("dataList");
-        if (dataList == null) {
-            dataList = new ArrayList<>();
-            httpSession.setAttribute("dataList", dataList);
+        if (httpSessionList == null) {
+            httpSessionList = new HttpSessionList();
+            httpSessionList.setSessionList(new ArrayList<>());
+            httpSession.setAttribute("session", httpSessionList);
         }
         return "homepage";
     }
@@ -43,8 +43,10 @@ public class SessionController {
         // if(temp instanceof List<HttpSessionData>){
         //     List<HttpSessionData> dataList = (List<HttpSessionData>) temp;
         // }
-        List<HttpSessionData> sessions = (List<HttpSessionData>)httpSession.getAttribute("dataList");
-        model.addAttribute("sessions", sessions);
+        HttpSessionList httpSessionList = (HttpSessionList)httpSession.getAttribute("session");
+        Optional<List<HttpSessionData>> data = Optional.of(httpSessionList.getSessionList());
+        List<HttpSessionData> dataList = data.get();
+        model.addAttribute("dataList", dataList);
         return "sessionList";
     }
 
@@ -62,10 +64,12 @@ public class SessionController {
     }
 
     @PostMapping("/sessions/create")
-    public String handleSessionForm(@ModelAttribute HttpSessionData data, HttpSession httpSession) {
-        List<HttpSessionData> dataList = (List<HttpSessionData>)httpSession.getAttribute("dataList");
-        dataList.add(data);
-        httpSession.setAttribute("data", dataList);
+    public String handleSessionForm(@ModelAttribute HttpSessionData dataGot, HttpSession httpSession) {
+        HttpSessionList httpSessionList = (HttpSessionList)httpSession.getAttribute("session");
+        Optional<List<HttpSessionData>> data = Optional.of(httpSessionList.getSessionList());
+        List<HttpSessionData> dataList = data.get();
+        dataList.add(dataGot);
+        httpSession.setAttribute("dataList", dataList);
 
         return "redirect:/home";
     }

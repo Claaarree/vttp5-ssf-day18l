@@ -18,12 +18,12 @@
         </thead>
         <tbody>
             <!-- thymeleaf iteration below -->
-            <span th:each="sd : ${sessions}">
+            <span th:each="data : ${dataList}">
                 <tr>
-                    <td name="name" th:utext="${sd.name}"></td>
-                    <td name="dob" th:utext="${#dates.format(sd.dob, 'dd MMM YYYY')}"></td>
+                    <td name="name" th:utext="${data.name}"></td>
+                    <td name="dob" th:utext="${#dates.format(data.dob, 'dd MMM YYYY')}"></td>
                     <!-- below is if using localdate above is using date -->
-                    <!-- <td name="dob" th:utext="${sd.dob}"></td> -->
+                    <!-- <td name="dob" th:utext="${data.dob}"></td> -->
                 </tr>
             </span>
         </tbody>

@@ -1,22 +1,22 @@
 package sg.edu.nus.iss.vttp5a_ssf_day18l.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import sg.edu.nus.iss.vttp5a_ssf_day18l.model.HttpSessionData;
+import sg.edu.nus.iss.vttp5a_ssf_day18l.model.HttpSessionList;
 
 @Repository
 public class SessionDataRepo {
     
-    private List<HttpSessionData> sessionDatas = new ArrayList<>();
+    private HttpSessionList httpSessionList;
 
     public List<HttpSessionData> getAllSessionDatas() {
-        return sessionDatas;
+        return httpSessionList.getSessionList();
     }
 
     public void addSessionData(HttpSessionData httpSessionData) {
-        sessionDatas.add(httpSessionData);
+        httpSessionList.getSessionList().add(httpSessionData);
     }
 }
